@@ -1,0 +1,251 @@
+openapi: 3.0.3
+info:
+  title: Codeleap Cat Breeds API
+  version: 1.0.0
+  description: API for managing cat breeds and images
+servers:
+- url: http://localhost:8080/api
+paths:
+  /breeds:
+    get:
+      summary: Get all breeds
+      responses:
+        '200':
+          description: List of breeds
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BreedDto'
+  /breeds/{id}:
+    get:
+      summary: Get breed by ID
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Breed details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BreedDto'
+        '404':
+          description: Not found
+  /breeds/{id}/images:
+    post:
+      summary: Upload image for breed
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Image uploaded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImageResponse'
+  /breeds/{id}/images/{imageId}:
+    get:
+      summary: Download image
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      - in: path
+        name: imageId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Image file
+          content:
+            image/jpeg:
+              schema:
+                type: string
+                format: binary
+    delete:
+      summary: Delete image
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      - in: path
+        name: imageId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Image deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImageResponse'
+  /breeds/{id}/images/{imageId}/display:
+    get:
+      summary: Display image in browser
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+      - in: path
+        name: imageId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Image file
+          content:
+            image/jpeg:
+              schema:
+                type: string
+                format: binary
+  /breeds/images/random:
+    get:
+      summary: Get random image URLs
+      parameters:
+      - in: query
+        name: count
+        required: false
+        schema:
+          type: integer
+          default: 20
+      responses:
+        '200':
+          description: List of image URLs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ImageUrlResponse'
+components:
+  schemas:
+    BreedDto:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        cfa_url:
+          type: string
+        vetstreet_url:
+          type: string
+        vcahospitals_url:
+          type: string
+        temperament:
+          type: string
+        origin:
+          type: string
+        country_codes:
+          type: string
+        country_code:
+          type: string
+        description:
+          type: string
+        life_span:
+          type: string
+        indoor:
+          type: integer
+        lap:
+          type: integer
+        alt_names:
+          type: string
+        adaptability:
+          type: integer
+        affection_level:
+          type: integer
+        child_friendly:
+          type: integer
+        dog_friendly:
+          type: integer
+        energy_level:
+          type: integer
+        grooming:
+          type: integer
+        health_issues:
+          type: integer
+        intelligence:
+          type: integer
+        shedding_level:
+          type: integer
+        social_needs:
+          type: integer
+        stranger_friendly:
+          type: integer
+        vocalisation:
+          type: integer
+        experimental:
+          type: integer
+        hairless:
+          type: integer
+        natural:
+          type: integer
+        rare:
+          type: integer
+        rex:
+          type: integer
+        suppressed_tail:
+          type: integer
+        short_legs:
+          type: integer
+        wikipedia_url:
+          type: string
+        hypoallergenic:
+          type: integer
+        reference_image_id:
+          type: string
+        weight:
+          $ref: '#/components/schemas/WeightDto'
+    WeightDto:
+      type: object
+      properties:
+        imperial:
+          type: string
+        metric:
+          type: string
+    ImageResponse:
+      type: object
+      properties:
+        imageId:
+          type: string
+        breedId:
+          type: string
+        message:
+          type: string
+    ImageUrlResponse:
+      type: object
+      properties:
+        url:
+          type: string
+        breedId:
+          type: string
+        imageId:
+          type: string
